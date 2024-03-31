@@ -2,6 +2,7 @@
 import { getCategoryAPI } from '@/apis/layout';
 import { onMounted,ref } from 'vue'
 
+//一级导航渲染
 const categoryList=ref([])
 //因为在发送接口之前可能还要再做一些额外的处理，所以写到函数体里并处理数据
 const getCategory=async ()=>{
@@ -9,7 +10,6 @@ const getCategory=async ()=>{
   console.log(res);
   categoryList.value=res.result
 }
-
 onMounted(()=>{ 
   getCategory()
 })

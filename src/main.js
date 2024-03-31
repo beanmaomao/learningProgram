@@ -1,19 +1,14 @@
-//引入初始化文件
+//引入样式初始化文件
 import '@/styles/common.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import App from './App.vue'
 import router from './router'
-//测试接口函数
-import { getCategory } from './apis/testAPI'
-getCategory().then(res=>{
-    console.log(res);
-})
-const app = createApp(App)
 
-app.use(createPinia())
+const app=createApp(App)
+const pinia=createPinia()
+
+app.use(pinia)
 app.use(router)
-
 app.mount('#app')
