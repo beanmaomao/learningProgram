@@ -5,6 +5,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import { useIntersectionObserver } from '@vueuse/core'
 
 const app=createApp(App)
 const pinia=createPinia()
@@ -12,3 +13,24 @@ const pinia=createPinia()
 app.use(pinia)
 app.use(router)
 app.mount('#app')
+
+//定义全局指令:图片懒加载
+app.directive('img-lazy',{
+    mounted(el,binding){
+        //el:指令绑定的那个元素 img
+        //binding:binding.value 指令等于号后面绑定的表达式的值 图片url
+        console.log(el,binding.value);
+        useIntersectionObserver(
+            el,
+            ([{ isIntersecting }]) => {
+              console.log(isIntersecting)
+              if (isIntersecting) {
+                // 进入视口区域
+                //给src赋一个请求地址
+                el.src = binding.value
+                stop()
+              }
+            },
+          )
+    }
+})
