@@ -1,9 +1,15 @@
 import httpInstance from '@/utils/http'
 
 //获取banner
-export function getBannerAPI(){
+export function getBannerAPI(params={}){
+    //对传参params参数解构赋值并默认为字符串1
+    const {distributionSite='1'}=params
     return httpInstance({
-        url:'/home/banner'
+        url:'/home/banner',
+        //配置params参数选择投放位置 默认为1 商品为2
+        params:{
+            distributionSite
+        }
     })
 }
 
