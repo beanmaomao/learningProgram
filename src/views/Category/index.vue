@@ -1,21 +1,22 @@
 <script setup>
 import { getCategoryAPI } from '@/apis/category'
 import { ref,onMounted } from 'vue'
+import GoodsItem from '../Home/components/GoodsItem.vue';
 //引入函数在组件内部获取路由参数
 import { useRoute } from 'vue-router'
 
+//请求二级分类参数(渲染面包屑)
 const categoryData=ref({})
 const route=useRoute()
-const getCategory=async() =>{
+const getCategory= async () =>{
   const res=await getCategoryAPI(route.params.id)
   categoryData.value=res.result
 }
 onMounted(()=>getCategory())
 
-//搬运主轮播图的逻辑
+//搬运主轮播图的逻辑（分类页面的轮播图）
 import { getBannerAPI } from '@/apis/home'
 const bannerList=ref([])
-
 const getBanner=async()=>{
   //params，query参数以对象形式传递
     const res =await getBannerAPI({
@@ -34,7 +35,7 @@ onMounted(()=>getBanner())
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>居家</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
     </div>
@@ -47,6 +48,26 @@ onMounted(()=>getBanner())
       </el-carousel-item>
     </el-carousel>
   </div>
+  <!-- 分类数据渲染 -->
+  <div class="sub-list">
+  <h3>全部分类</h3>
+  <ul>
+    <li v-for="i in categoryData.children" :key="i.id">
+      <RouterLink to="/">
+        <img :src="i.picture" />
+        <p>{{ i.name }}</p>
+      </RouterLink>
+    </li>
+  </ul>
+</div>
+<div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+  <div class="head">
+    <h3>- {{ item.name }}-</h3>
+  </div>
+  <div class="body">
+    <GoodsItem v-for="good in item.goods" :goods="good" :key="good.id" />
+  </div>
+</div>
 </template>
 
 

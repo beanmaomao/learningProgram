@@ -14,6 +14,7 @@ const router = createRouter({
     {
       path:'/',
       component:Layout,
+      //二级路由默认页路由配置为空
       children:[
         {
           path:'',
