@@ -1,41 +1,12 @@
 <script setup>
-import { getCategoryAPI } from '@/apis/category'
-import { ref,onMounted } from 'vue'
 import GoodsItem from '../Home/components/GoodsItem.vue';
-import { onBeforeRouteUpdate } from 'vue-router';
+import { useBanner } from './composables/useBanner'
+import {useCategory} from './composables/useCategory'
 
-//路由参数变化时，把分类数据接口重新发送
-onBeforeRouteUpdate((to)=>{
-  //使用最新的路由参数请求最新的分类数据：route.params.id属于滞后数据
-  //"to"能获取目标路径参数
-  getCategory(to.params.id)
-})
-
-//引入函数在组件内部获取路由参数
-import { useRoute } from 'vue-router'
-//请求二级分类参数(渲染面包屑)
-const categoryData=ref({})
-const route=useRoute()
-//默认是route的id参数，当传入参数时会变成新的id参数
-const getCategory= async (id=route.params.id) =>{
-  const res=await getCategoryAPI(id)
-  categoryData.value=res.result
-}
-onMounted(()=>getCategory())
-
-//搬运主轮播图的逻辑（分类页面的轮播图）
-import { getBannerAPI } from '@/apis/home'
-const bannerList=ref([])
-const getBanner=async()=>{
-  //params，query参数以对象形式传递
-    const res =await getBannerAPI({
-      distributionSite:'2'
-    })
-    console.log(res);
-    bannerList.value=res.result
-}
-onMounted(()=>getBanner())
-
+//解构赋值useBanner函数返回的值
+const {bannerList} =useBanner()
+//解构赋值useCategory函数返回的值
+const {categoryData} =useCategory()
 </script>
 
 <template>
