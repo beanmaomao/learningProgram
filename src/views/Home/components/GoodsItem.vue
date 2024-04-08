@@ -1,4 +1,5 @@
 <script setup>
+//插槽
 defineProps({
     goods:{
         type:Object,
@@ -8,6 +9,7 @@ defineProps({
 </script>
 
 <template>
+  <!-- 购物卡片 -->
  <RouterLink to="/" class="goods-item">
     <img v-img-lazy="goods.picture" alt="" />
     <p class="name ellipsis">{{ goods.name }}</p>
