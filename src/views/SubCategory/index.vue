@@ -35,6 +35,22 @@ const tabChange=()=>{
   reqData.value.page=1
   getGoodList()
 }
+
+//加载无限滚轮数据
+const disabled=ref(false)
+const load= async ()=>{
+  //获取下一页的数据
+  reqData.value.page++
+  const res = await getSubCategoryAPI(reqData.value)
+  //将数据展开并放在一起形成一个新数组赋值交给goodList
+  goodList.value=[...goodList.value,...res.result.items]
+  //加载完毕停止监听
+  if(res.result.items.length===0)
+  {
+    disabled.value=true
+  }
+
+}
 </script>
 
 <template>
@@ -57,7 +73,7 @@ const tabChange=()=>{
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
+      <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
          <!-- 商品列表-->
          <GoodsItem v-for="good in goodList" :goods="good" :key=good.id />
       </div>
