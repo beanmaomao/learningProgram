@@ -3,6 +3,7 @@ import {getCategoryFilterAPI, getSubCategoryAPI} from '@/apis/category'
 import {ref,onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 import GoodsItem from '../Home/components/GoodsItem.vue';
+
 //获取面包屑渲染数据
 const categoryData=ref({})
 const route=useRoute()
@@ -23,10 +24,17 @@ const reqData=ref({
      sortField: 'publishTime'
 })
 const getGoodList=async()=>{
+  //POST数据请求相应的数据
   const res=await getSubCategoryAPI(reqData.value)
   goodList.value=res.result.items
 }
 onMounted(()=>getGoodList())
+
+//tab切换回调
+const tabChange=()=>{
+  reqData.value.page=1
+  getGoodList()
+}
 </script>
 
 <template>
@@ -42,7 +50,9 @@ onMounted(()=>getGoodList())
     </div>
     <div class="sub-container">
         <!-- 筛选框 -->
-      <el-tabs>
+        <!-- tabchange触发事件为active-"name"发生变化时调用“”内函数 -->
+      <el-tabs v-model="reqData.sortField" @tab-change="tabChange">
+        <!-- 这里的name必须按照接口文档的要求写 -->
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>

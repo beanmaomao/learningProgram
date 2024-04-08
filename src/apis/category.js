@@ -32,6 +32,7 @@ export const getCategoryFilterAPI = (id) => {
      categoryId: 1005000 ,
      page: 1,
      pageSize: 20,
+     //sortField为筛选条件参数
      sortField: 'publishTime' | 'orderNum' | 'evaluateNum'
    } 
  * @return {*}
