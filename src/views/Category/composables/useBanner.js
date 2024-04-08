@@ -1,7 +1,7 @@
 //封装轮播图业务
 //搬运主轮播图的逻辑（分类页面的轮播图）
 import { getBannerAPI } from '@/apis/home'
-import {ref} from 'vue'
+import {ref,onMounted} from 'vue'
 
 const bannerList=ref([])
 

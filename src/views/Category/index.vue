@@ -1,7 +1,7 @@
 <script setup>
 import GoodsItem from '../Home/components/GoodsItem.vue';
 import { useBanner } from './composables/useBanner'
-import {useCategory} from './composables/useCategory'
+import { useCategory} from './composables/useCategory'
 
 //解构赋值useBanner函数返回的值
 const {bannerList} =useBanner()
@@ -33,8 +33,9 @@ const {categoryData} =useCategory()
   <div class="sub-list">
   <h3>全部分类</h3>
   <ul>
+    <!-- 跳转二级路由下的链接(路径id发生变化) -->
     <li v-for="i in categoryData.children" :key="i.id">
-      <RouterLink to="/">
+      <RouterLink :to="`/category/sub/${i.id}`">
         <img :src="i.picture" />
         <p>{{ i.name }}</p>
       </RouterLink>
