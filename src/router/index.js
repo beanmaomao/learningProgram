@@ -34,7 +34,13 @@ const router = createRouter({
       path:'/login',
       component:Login
     }
-  ]
+  ],
+  //路由行为定制(浏览分类数据时点击二级分类列表跳转至顶部)
+  scrollBehavior(){
+    return{
+      top:0
+    }
+  }
 })
 
 export default router
