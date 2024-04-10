@@ -6,7 +6,8 @@ import { useRoute } from 'vue-router';
 //设计props参数适配不同的title和参数
 const props=defineProps({
     hotType:{
-        type:Number
+        type:Number,
+        default:1
     }
 })
 //适配title
