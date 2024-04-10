@@ -15,7 +15,7 @@ onMounted(()=>getNewList())
 
 <template>
   <HomePanel title="新鲜好物" subtitle="新鲜好物">
-    <ul class="goods-list">
+    <ul class="goods-list"> 
     <li v-for="item in newList" :key="item.id">
       <RouterLink :to="`/detail/${item.id}`">
         <img :src="item.picture" alt="" />
