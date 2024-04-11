@@ -36,6 +36,18 @@ const rules={
     ]
 }
 
+//获取form实例做统一校验
+const formRef=ref(null)
+const doLogin=()=>{
+  //调用实例方法
+  formRef.value.validator((valid)=>{
+  //valid:表单所有item通过校验才为true,以其为参数为判断条件
+  if(valid){
+    //TODO LOGIN
+  }
+
+  })
+}
 </script>
 
 
@@ -61,7 +73,7 @@ const rules={
         <div class="account-box">
           <div class="form">
             <!-- 这里的model和rules数据都是ElementPlus自带的属性，绑定对应的变量即可 -->
-            <el-form :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
+            <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
               <!-- prop=""表单域指定 -->
               <el-form-item label="账户" prop="account">
                 <el-input/>
@@ -74,7 +86,7 @@ const rules={
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
             </el-form>
           </div>
         </div>
