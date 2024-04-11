@@ -7,26 +7,72 @@ const imageList = [
   "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
   "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
 ]
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
+import { useMouseInElement } from '@/vueuse/core'
 //1.小图切换大图显示
 const activeIndex=ref(0)
 const enterhandler=(i)=>{
     activeIndex.value=i
 }
+//2.获取鼠标相对位置
+const target=ref(null)
+const{elementX,elementY,isOutside}=useMouseInElement(target)
+
+//3.控制滑块跟随鼠标移动（监听elementX/Y变化，一旦变化重新设置left/top
+//声明滑块坐标
+const left=ref(0)
+const top=ref(0)
+//声明大图坐标
+const positionX=ref(0)
+const positionY=ref(0)
+//有效范围内控制滑块距离
+watch([elementX,elementY,isOutside],()=>{
+//鼠标不进入不执行逻辑
+if(isOutside.value)return
+//横向
+if(elementX.value>100&&elementX.value<300){
+    left.value=elementX.value-100
+}
+//纵向
+if(elementY.value>100&&elementY.value<300){
+    top.value=elementY.value-100
+}
+//处理边界
+if(elementX>300)
+{
+    left.value=200
+}
+if(elementX<100)
+{
+    left.value=0
+}
+if(elementY>300)
+{
+    top.value=200
+}
+if(elementY<100)
+{
+    top.value=0
+}
+})
+//控制大图显示、
+positionX.value=-left.value*2
+positionY.value=-top.value*2
 </script>
 
 
 <template>
   <div class="goods-image">
     <!-- 左侧大图-->
+    <!-- ref="target"绑定变量 -->
     <div class="middle" ref="target">
       <img :src="imageList[activeIndex]" alt="" />
       <!-- 蒙层小滑块 -->
-      <div class="layer" :style="{ left: `0px`, top: `0px` }"></div>
+      <div class="layer" :style="{ left: `${left}px`, top: `${top}px`}" v-show="!isOutside"></div>
     </div>
     <!-- 小图列表 -->
     <ul class="small">
-      <li v-for="(img, i) in imageList" :key="i" @mouseenter="enterhandler(i)" :class="{ acitve:i===activeIndex }">
+      <li v-for="(img, i) in imageList" :key="i" @mouseenter="enterhandler(i)" :class="{ acitve: i === activeIndex }">
         <img :src="img" alt="" />
       </li>
     </ul>
@@ -34,10 +80,10 @@ const enterhandler=(i)=>{
     <div class="large" :style="[
       {
         backgroundImage: `url(${imageList[0]})`,
-        backgroundPositionX: `0px`,
-        backgroundPositionY: `0px`,
+        backgroundPositionX: `${positionX}px`,
+        backgroundPositionY: `${positionY}px`,
       },
-    ]" v-show="false"></div>
+    ]" v-show="isOutside"></div>
   </div>
 </template>
 
