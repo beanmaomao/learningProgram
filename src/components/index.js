@@ -9,6 +9,6 @@ export const componentPlugin={
     install(app){
         //app.componet('组件名字',组件配置对象)
         app.component('XtxImageView',ImageView)
-        app.componet('XtxSku',Sku)
+        app.component('XtxSku',Sku)
     }
 }
