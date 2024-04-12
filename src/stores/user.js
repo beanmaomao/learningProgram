@@ -16,5 +16,8 @@ export const useUserStore=defineStore('user',()=>{
     return{
         userInfo,
         getUserInfo
-    }
+    },{
+        //pinia-plugin-persistedstate持久化插件的配置项：使整个Store使用默认持久化保存
+        persist: true,
+      }
 })
