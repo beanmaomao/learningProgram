@@ -2,6 +2,8 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+//这里引入的是路由器
+import router from '@/router'
 //2.创建axios实例
 const httpInstance =axios.create({
     baseURL: 'http://pcapi-xiaotuxian-front-devtest.itheima.net',
@@ -27,6 +29,14 @@ httpInstance.interceptors.response.use(res => res.data, e => {
       type:'warning',
       message:e.respond.data.message
     })
+  //401token长时间无操作失效处理
+  //1.清理用户本地数据
+  //2.跳转到登录页
+  if(e.response.statu===401){
+    const userStore=useUserStore()
+    userStore.clearUserInfo()
+    router.replace('/login')
+  }
     return Promise.reject(e)
   })
   
