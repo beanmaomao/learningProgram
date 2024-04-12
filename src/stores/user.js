@@ -12,10 +12,15 @@ export const useUserStore=defineStore('user',()=>{
         const res=await loginAPI({account,password})
         userInfo.value=res.result
     }
+    //4.退出时清除用户数据
+     const clearUserInfo=async ()=>{
+        userInfo.value={}
+     }
     //3.以对象的形式把state和action return
     return{
         userInfo,
-        getUserInfo
+        getUserInfo,
+        clearUserInfo
     },{
         //pinia-plugin-persistedstate持久化插件的配置项：使整个Store使用默认持久化保存
         persist: true,

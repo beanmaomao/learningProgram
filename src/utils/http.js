@@ -9,6 +9,7 @@ const httpInstance =axios.create({
 })
 // axios请求拦截器
 httpInstance.interceptors.request.use(config => {
+  //请求拦截器携带token作为用户标识去获取数据
   //1.从pinia获取token数据
   const userStore=useUserStore()
   const token=userStore.userInfo.token
