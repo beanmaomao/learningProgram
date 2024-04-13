@@ -28,15 +28,17 @@ export const useCartStore=defineStore('cart',()=>{
         const idx=carList.value.findIndex((item)=>{skuId===item.skuId})
         cartList.splice(idx,1)
     }
+
     //4.定义计算属性计算总价-reduce累加器
+    //总数量：所有项ount之和
     const allCount=computed(()=>{
-        //总数量：所有项ount之和
         cartList.value.reduce((a,c)=>a+c.count,0)
     })
+    //总价：所有项的count*price之和
     const allPrice=computed(()=>{
-        // 总价：所有项的count*price之和
-        cartList.value.reduce((a,c)=>a+c.count*c.price,0)
+    cartList.value.reduce((a,c)=>a+c.count*c.price,0)
     })
+
     //5.定义单选购物车内商品的功能
     const singleCheck=(skuId,selected)=>{
         //通过skuId找到要修改的那一项，然后把它的selected修改为传过来的selectd
@@ -51,6 +53,13 @@ export const useCartStore=defineStore('cart',()=>{
         //用forEach方法把cartList中的每一项的selected属性都设置为全选框传入的状态
         cartList.value.forEach(item=>item.selected=selected)
     }
+
+    //8.定义计算属性:用filter方法筛选cartList数组中selected为true的元素，仍然返回一个数组可以继续调用reduce累加器方法
+    //已选择商品的总数量
+    const selectedCount=computed(()=>cartList.value.filter(item=>item.selected)).reduce((a,c)=>a+c.count,0)
+    //已选择商品的总价钱
+    const selectedPrice=computed(()=>cartList.value.filter(item=>item.selected)).reduce((a,c)=>a+c.count*c.price,0)
+
     return{
         cartList,
         addCart,
@@ -59,7 +68,9 @@ export const useCartStore=defineStore('cart',()=>{
         allPrice,
         singleCheck,
         isAll,
-        allCheck
+        allCheck,
+        selectedCount,
+        selectedPrice
     },{
         //pinia-plugin-persistedstate持久化插件的配置项：使整个Store使用默认持久化保存,全局注册插件需要用的时候加这个配置项即可
         persist: true,
