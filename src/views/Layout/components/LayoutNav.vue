@@ -1,9 +1,10 @@
 <script setup>
-import {useUserStore} from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router';
 
 const userStore=useUserStore()
 const router=useRouter()
+
 const confirm=()=>{
 //定义退出登录业务逻辑实现
   //1.清楚业务信息
@@ -18,8 +19,10 @@ const confirm=()=>{
       <ul>
         <!-- v-if和v-else:多模板渲染 区分登陆状态和非登陆状态 -->
         <!-- userInfo中的token数据用于标识当前用户是否登录 -->
-        <template v-if="userStore.userInfo.token">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{ userStore.userInfo.account }}</a></li>
+        <!--  v-if=" userStore.userInfo.token" -->
+        <!-- {{ userStore.userInfo.account }} -->
+        <template v-if="true">
+          <li><a href="javascript:;"><i class="iconfont icon-user">11</i></a></li>
           <li>
             <!-- el-popconfirm组件自带comfirm事件，点击确认按钮调用函数 -->
             <el-popconfirm title="确认退出吗?" @confirm="confirm" confirm-button-text="确认" cancel-button-text="取消">

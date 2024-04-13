@@ -14,10 +14,10 @@ import { componentPlugin } from './components/index'
 const app=createApp(App)
 const pinia=createPinia()
 
+//注册持久化插件
+pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(lazyPlugin)
 app.use(router)
 app.use(componentPlugin)
-//注册持久化插件
-pinia.use(piniaPluginPersistedstate)
 app.mount('#app')
