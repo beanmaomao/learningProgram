@@ -43,13 +43,23 @@ export const useCartStore=defineStore('cart',()=>{
         const item=cartList.value.find((item)=>item.skuId===skuId)
         item.selected=selected
     }
+    //6.所有单选决定全选
+    //用数组的every方法只有cartList中的每一项selected都为true时isAll的值才为true
+    const isAll=computed(()=>cartList.value.every((item)=>item.selected))
+    //7.全选决定所有单选
+    const allCheck=(selected)=>{
+        //用forEach方法把cartList中的每一项的selected属性都设置为全选框传入的状态
+        cartList.value.forEach(item=>item.selected=selected)
+    }
     return{
         cartList,
         addCart,
         delCart,
         allCount,
         allPrice,
-        singleCheck
+        singleCheck,
+        isAll,
+        allCheck
     },{
         //pinia-plugin-persistedstate持久化插件的配置项：使整个Store使用默认持久化保存,全局注册插件需要用的时候加这个配置项即可
         persist: true,
