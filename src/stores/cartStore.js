@@ -19,9 +19,19 @@ export const useCartStore=defineStore('cart',()=>{
             carList.value.push(goods)
         }
     }
+    //3.定义actionn-delCart
+    const delCart=(skuId)=>{
+        //思路：
+        //1.找到要删除的项的下标值-splice
+        //2.使用数组的过滤方法-filter
+        //1.
+        const idx=carList.value.findIndex((item)=>{skuId===item.skuId})
+        carList.splice(idx,1)
+    }
     return{
         carList,
-        addCart
+        addCart,
+        delCart
     },{
         //pinia-plugin-persistedstate持久化插件的配置项：使整个Store使用默认持久化保存,全局注册插件需要用的时候加这个配置项即可
         persist: true,
