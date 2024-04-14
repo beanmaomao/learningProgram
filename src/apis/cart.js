@@ -27,3 +27,15 @@ export const delCartAPI=()=>{
         }
     })
 }
+//合并购物车
+export const mergeCartAPI=(data)=>{
+    return request({
+        url:'/member/cart/merge',
+        method:'POST',
+        data:{
+            skuId,
+            selected,
+            coont
+        }
+    })
+}

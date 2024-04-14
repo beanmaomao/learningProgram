@@ -94,6 +94,7 @@ export const useCartStore=defineStore('cart',()=>{
         singleCheck,
         allCheck,
         clearCart,
+        updateNewCart,
         cartList,
         allCount,
         allPrice,
