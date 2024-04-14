@@ -2,14 +2,17 @@
 import { getOrderAPI } from '@/apis/pay';
 import {onMounted, ref} from 'vue'
 import {useRoute} from 'vue-router'
-
+import { useCountDown } from '@/composables/useCountDown';
 //获取支付的详情信息
 const payInfo=ref({})
 const route=useRoute()
+const{ formatTime,start }=useCountDown()
 const getPayInfo=async ()=>{
     //route.query.id:获取路由参数（订单Id）
     const res=await getOrderAPI(route.query.id)
     payInfo.value=res.result
+    //初始化倒计时秒数
+    start(res.result.countdown)
 }
 onMounted(()=>getPayInfo())
 
@@ -21,6 +24,8 @@ const backURL = 'http://127.0.0.1:5173/paycallback'
 const redirectUrl = encodeURIComponent(backURL)
 //三方平台的拼接地址（后端给的 ）
 const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirectUrl}`
+
+
 </script>
 
 
