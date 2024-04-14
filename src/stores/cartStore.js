@@ -1,11 +1,16 @@
 // 封装购物车模块
 import { defineStore } from 'pinia'
 import { ref,computed } from 'vue'
-import { useUserStore } from './user'
-import { insertCartAPI,findNewCartListAPI } from '@/apis/cart'
+import { useUserStore } from './userStore'
+import { insertCartAPI,findNewCartListAPI,delCartAPI } from '@/apis/cart'
 
 export const useCartStore=defineStore('cart',()=>{
     const userStore=useUserStore()
+    //代码复用：抽离一个获取最新购物车列表的action
+    const updateNewCart=async()=>{
+        const res= await findNewCartListAPI()
+        cartList.value=res.result
+    }
     //利用计算属性做一个映射赋值
     const isLogin=computed(()=>userStore.usreInfo.token)
     //1.定义state-carList
@@ -17,8 +22,7 @@ export const useCartStore=defineStore('cart',()=>{
         if(isLogin.value){
         //登录之后的加入购物车逻辑
             await insertCartAPI({skuId,count})
-            const res= await findNewCartListAPI()
-            cartList.value=res.result
+            updateNewCart()
         }
         else{
         //(本地购物车)添加购物车操作
@@ -35,10 +39,11 @@ export const useCartStore=defineStore('cart',()=>{
         }
     }
     //3.定义action-delCart：删除购物车
-    const delCart=(skuId)=>{
-       
+    const delCart=async (skuId)=>{
         if(isLogin.value){
             //实现接口购物车的删除功能逻辑
+           await delCartAPI([skuId])
+           updateNewCart()
         }
         else{
         //本地删除思路：
@@ -79,15 +84,20 @@ export const useCartStore=defineStore('cart',()=>{
     //已选择商品的总价钱
     const selectedPrice=computed(()=>cartList.value.filter(item=>item.selected).reduce((a,c)=>a+c.count*c.price,0))
 
+    //9.退出登录时清除购物车
+    const clearCart=()=>[
+        cartList.value=[]
+    ]
     return{
-        cartList,
         addCart,
         delCart,
+        singleCheck,
+        allCheck,
+        clearCart,
+        cartList,
         allCount,
         allPrice,
-        singleCheck,
         isAll,
-        allCheck,
         selectedCount,
         selectedPrice
     },{

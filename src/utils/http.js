@@ -1,7 +1,7 @@
 //1.axios基础封装
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/userStore.js'
 //这里引入的是路由器
 import router from '@/router'
 //2.创建axios实例
