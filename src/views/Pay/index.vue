@@ -2,15 +2,25 @@
 import { getOrderAPI } from '@/apis/pay';
 import {onMounted, ref} from 'vue'
 import {useRoute} from 'vue-router'
+
 //获取支付的详情信息
 const payInfo=ref({})
 const route=useRoute()
 const getPayInfo=async ()=>{
-    //route.query.id:获取路由参数
+    //route.query.id:获取路由参数（订单Id）
     const res=await getOrderAPI(route.query.id)
     payInfo.value=res.result
 }
 onMounted(()=>getPayInfo())
+
+//跳转支付
+//携带订单id以及回调地址跳转到支付地址（get)
+//支付地址
+const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+const backURL = 'http://127.0.0.1:5173/paycallback'
+const redirectUrl = encodeURIComponent(backURL)
+//三方平台的拼接地址（后端给的）
+const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirectUrl}`
 </script>
 
 
@@ -34,7 +44,9 @@ onMounted(()=>getPayInfo())
         <p class="head">选择以下支付方式付款</p>
         <div class="item">
           <p>支付平台</p>
+          <!-- 微信支付 -->
           <a class="btn wx" href="javascript:;"></a>
+          <!-- 支付宝支付 -->
           <a class="btn alipay" :href="payUrl"></a>
         </div>
         <div class="item">
