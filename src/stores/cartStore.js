@@ -36,14 +36,18 @@ export const useCartStore=defineStore('cart',()=>{
     }
     //3.定义action-delCart：删除购物车
     const delCart=(skuId)=>{
-        //思路：
+       
+        if(isLogin.value){
+            //实现接口购物车的删除功能逻辑
+        }
+        else{
+        //本地删除思路：
         //1.找到要删除的项的下标值-splice
         //2.使用数组的过滤方法-filter
         //1.
         const idx=carList.value.findIndex((item)=>{skuId===item.skuId})
         cartList.splice(idx,1)
-    }
-
+    }}
     //4.定义计算属性计算总价-reduce累加器
     //总数量：所有项ount之和
     const allCount=computed(()=>{
