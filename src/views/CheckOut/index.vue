@@ -2,7 +2,7 @@
 import { getCheckInfoAPI } from '@/apis/checkout';
 import {onMounted, ref} from 'vue'
 const checkInfo = ref({})  // 订单对象
-const curAddress = ref({})  // 地址对象
+const curAddress = ref({})  // 地址对象（地址显示对象）
 //获取支付详情数据
 const getCheckInfo=async ()=>{
     const res =await getCheckInfoAPI()
@@ -15,6 +15,18 @@ onMounted(()=>getCheckInfo())
 
 //控制弹框打开
 const showDialog=ref(false)
+//声明切换地址的回调
+const activeAddress=ref({})
+const switchAddress=(item)=>{
+  //点击哪一项哪一项就会被记录下来
+  activeAddress.value=item
+}
+
+const confirm=()=>{
+  curAddress.value=activeAddress.value
+  showDialog.value=false
+  activeAddress={}
+}
 </script>
 
 <template>
@@ -34,7 +46,7 @@ const showDialog=ref(false)
               </ul>
             </div>
             <div class="action">
-              <el-button size="large" @click="toggleFlag = true" @click="showDialog=true">切换地址</el-button>
+              <el-button size="large" @click="showDialog = true">切换地址</el-button>
               <el-button size="large" @click="addFlag = true">添加地址</el-button>
             </div>
           </div>
@@ -115,10 +127,12 @@ const showDialog=ref(false)
     </div>
   </div>
   <!-- 切换地址 -->
+  <!-- CV弹框结构 -->
   <!-- el-dialog支持绑定一个v-model指令 -->
   <el-dialog v-model="showDialog" title="切换收货地址" width="30%" center>
   <div class="addressWrapper">
-    <div class="text item" v-for="item in checkInfo.userAddresses"  :key="item.id">
+    <!-- v-for循环遍历item查看是否其id与点击记录的Id相同 -->
+    <div class="text item" v-for="item in checkInfo.userAddresses" :key="item.id" @click="switchAddress(item)" :class="{active:actieveAddress.id===item.id}">
       <ul>
       <li><span>收<i />货<i />人：</span>{{ item.receiver }} </li>
       <li><span>联系方式：</span>{{ item.contact }}</li>
@@ -129,7 +143,7 @@ const showDialog=ref(false)
   <template #footer>
     <span class="dialog-footer">
       <el-button>取消</el-button>
-      <el-button type="primary">确定</el-button>
+      <el-button type="primary" @click="confirm">确定</el-button>
     </span>
   </template>
 </el-dialog>
