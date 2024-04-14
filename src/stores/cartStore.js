@@ -1,13 +1,27 @@
 // 封装购物车模块
 import { defineStore } from 'pinia'
 import { ref,computed } from 'vue'
+import { useUserStore } from './user'
+import { insertCartAPI,findNewCartListAPI } from '@/apis/cart'
 
 export const useCartStore=defineStore('cart',()=>{
+    const userStore=useUserStore()
+    //利用计算属性做一个映射赋值
+    const isLogin=computed(()=>userStore.usreInfo.token)
     //1.定义state-carList
     const cartList=ref([])
     //2.定义action-addCart：加入购物车
-    const addCart=(goods)=>{
-        //添加购物车操作
+    const addCart=async (goods)=>{
+        const {skuId,count}=goods
+        //(接口购物车)添加购物车操作
+        if(isLogin.value){
+        //登录之后的加入购物车逻辑
+            await insertCartAPI({skuId,count})
+            const res= await findNewCartListAPI()
+            cartList.value=res.result
+        }
+        else{
+        //(本地购物车)添加购物车操作
         //1.已经添加过——count+1
         //2.没有添加过——直接push
         //思路：通过匹配传递过来的商品对象中的skuId能不能再cartList中找到，找到了就是添加过
@@ -17,6 +31,7 @@ export const useCartStore=defineStore('cart',()=>{
         }
         else {
             cartList.value.push(goods)
+        }
         }
     }
     //3.定义action-delCart：删除购物车
@@ -56,9 +71,9 @@ export const useCartStore=defineStore('cart',()=>{
 
     //8.定义计算属性:用filter方法筛选cartList数组中selected为true的元素，仍然返回一个数组可以继续调用reduce累加器方法
     //已选择商品的总数量
-    const selectedCount=computed(()=>cartList.value.filter(item=>item.selected)).reduce((a,c)=>a+c.count,0)
+    const selectedCount=computed(()=>cartList.value.filter(item=>item.selected).reduce((a,c)=>a+c.count,0))
     //已选择商品的总价钱
-    const selectedPrice=computed(()=>cartList.value.filter(item=>item.selected)).reduce((a,c)=>a+c.count*c.price,0)
+    const selectedPrice=computed(()=>cartList.value.filter(item=>item.selected).reduce((a,c)=>a+c.count*c.price,0))
 
     return{
         cartList,
