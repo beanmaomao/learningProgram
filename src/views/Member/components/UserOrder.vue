@@ -13,6 +13,8 @@ const tabTypes = [
 
 //获取订单列表数据
 const orderList=ref([])
+//存储数据总数
+const total=ref(0)
 const params=ref({
   orderState:0,
   page:1,
@@ -21,7 +23,7 @@ const params=ref({
 const getOrderList=async ()=>{
     const res =await getUserOrder(params.value)
     orderList.value=res.result
-
+    total.value=res.result.counts
 }
 onMounted(()=>getOrderList())
 
@@ -30,6 +32,13 @@ onMounted(()=>getOrderList())
 const tabChange=(type)=>{
     //拿到新的orderType更改params中的参数重新发起网络请求
     params.value.orderState=type
+    getOrderList()
+}
+
+//页数切换
+//page为el组件的默认参数，绑定函数自动传入
+const pageChange=(page)=>{
+    params.value=page
     getOrderList()
 }
 </script>
@@ -114,7 +123,8 @@ const tabChange=(type)=>{
           </div>
           <!-- 分页 -->
           <div class="pagination-container">
-            <el-pagination background layout="prev, pager, next" />
+            <!-- 该组件本身有默认的条数：每页十条 -->
+            <el-pagination :total="total" :pageSize="params.pageSize" background layout="prev, pager, next" @current-change="pageChange"/>
           </div>
         </div>
       </div>
