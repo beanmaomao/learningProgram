@@ -1,14 +1,29 @@
 <script setup>
-const userStore = {}
+//通过pinia实例拿到用户信息数据
+import { useUserStore } from '@/stores/userStore';
+import { getLikeListAPI } from '@/apis/user'
+import {onMounted, ref} from 'vue'
+import GoodsItem from '@/views/Home/components/GoodsItem.vue';
+
+const userStore = useUserStore()
+const likeList=ref([])
+const getLikeList=async ()=>{
+    //{limit}限制了接口要拉几条数据
+    const res=await getLikeListAPI({limit:4})
+    likeList.value=res.result
+}
+onMounted(()=>getLikeList())
 </script>
 
 <template>
   <div class="home-overview">
     <!-- 用户信息 -->
     <div class="user-meta">
+        <!-- 用户头像 -->
       <div class="avatar">
         <img :src="userStore.userInfo?.avatar" />
       </div>
+      <!-- 用户名称 -->
       <h4>{{ userStore.userInfo?.account }}</h4>
     </div>
     <div class="item">
@@ -32,7 +47,7 @@ const userStore = {}
         <h4 data-v-bcb266e0="">猜你喜欢</h4>
       </div>
       <div class="goods-list">
-        <!-- <GoodsItem v-for="good in likeList" :key="good.id" :good="good" /> -->
+        <GoodsItem v-for="good in likeList" :key="good.id" :good="good" />
       </div>
     </div>
   </div>
