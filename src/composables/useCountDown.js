@@ -1,6 +1,8 @@
 //封装倒计时逻辑函数
-import {computed, ref} from 'vue'
+import {computed, onUnmounted, ref} from 'vue'
 import dayjs from 'dayjs'
+
+let timer=null
 export const useCountDown=()=>{
     //1.响应式的数据——显示绑定的数据
     const time=ref(0)
@@ -11,10 +13,14 @@ export const useCountDown=()=>{
         //逻辑:每隔一秒显示-1
         //传入的currentTime作为倒计时时间
         formatTime.value=currentTime
-        setInterval(()=>{
+        timer=setInterval(()=>{
             formatTime.value--
         },1000)
     }
+    //组件销毁时清除定时器
+    onUnmounted(()=>{
+        timer&&clearInterval(timer)
+    })
     return{
         formatTime,
         start
