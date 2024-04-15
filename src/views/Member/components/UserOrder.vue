@@ -24,11 +24,19 @@ const getOrderList=async ()=>{
 
 }
 onMounted(()=>getOrderList())
+
+//tab切换
+//这里的type为tab-change事件+el框架的默认参数
+const tabChange=(type)=>{
+    //拿到新的orderType更改params中的参数重新发起网络请求
+    params.value.orderState=type
+    getOrderList()
+}
 </script>
 
 <template>
   <div class="order-container">
-    <el-tabs>
+    <el-tabs @tab-change="tabChange">
       <!-- tab切换 -->
       <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
 
